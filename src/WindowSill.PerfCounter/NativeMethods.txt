@@ -1,0 +1,16 @@
+GlobalMemoryStatusEx
+GetSystemTimes
+QueryPerformanceCounter
+QueryPerformanceFrequency
+CreateToolhelp32Snapshot
+Process32First
+Process32Next
+GetSystemInfo
+GetTickCount64
+PdhOpenQuery
+PdhAddCounter
+PdhCollectQueryData
+PdhGetFormattedCounterValue
+PdhRemoveCounter
+PdhCloseQuery
+PDH_FMT_DOUBLE
