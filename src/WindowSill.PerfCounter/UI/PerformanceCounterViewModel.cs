@@ -32,6 +32,13 @@ public partial class PerformanceCounterViewModel : ObservableObject
     [ObservableProperty]
     private double animationSpeed = 1.0;
 
+    // Computed properties for UI binding
+    public string CpuText => $"CPU: {CpuUsage:F0}%";
+    public string MemoryText => $"RAM: {MemoryUsage:F0}%";
+    public string GpuText => $"GPU: {GpuUsage:F0}%";
+    public string MemoryDetailsText => $"Memory: {MemoryUsedMB:N0} / {MemoryTotalMB:N0} MB";
+    public string SpeedText => $"Speed: {AnimationSpeed:F1}x";
+
     public PerformanceCounterViewModel(
         IPerformanceMonitorService performanceMonitorService,
         ISettingsProvider settingsProvider)
@@ -74,13 +81,23 @@ public partial class PerformanceCounterViewModel : ObservableObject
 
     private void OnPerformanceDataUpdated(object? sender, PerformanceDataEventArgs e)
     {
-        CpuUsage = e.Data.CpuUsage;
-        MemoryUsage = e.Data.MemoryUsage;
-        GpuUsage = e.Data.GpuUsage;
-        MemoryUsedMB = e.Data.MemoryUsedMB;
-        MemoryTotalMB = e.Data.MemoryTotalMB;
+        ThreadHelper.RunOnUIThreadAsync(() =>
+        {
+            CpuUsage = e.Data.CpuUsage;
+            MemoryUsage = e.Data.MemoryUsage;
+            GpuUsage = e.Data.GpuUsage;
+            MemoryUsedMB = e.Data.MemoryUsedMB;
+            MemoryTotalMB = e.Data.MemoryTotalMB;
 
-        UpdateAnimationSpeed();
+            UpdateAnimationSpeed();
+
+            // Notify computed properties changed
+            OnPropertyChanged(nameof(CpuText));
+            OnPropertyChanged(nameof(MemoryText));
+            OnPropertyChanged(nameof(GpuText));
+            OnPropertyChanged(nameof(MemoryDetailsText));
+            OnPropertyChanged(nameof(SpeedText));
+        });
     }
 
     private void OnSettingChanged(ISettingsProvider sender, SettingChangedEventArgs args)
