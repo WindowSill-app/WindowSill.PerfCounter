@@ -55,21 +55,22 @@ public class PerformanceMonitorService : IPerformanceMonitorService
     public PerformanceData GetCurrentPerformanceData()
     {
         var cpuUsage = GetCpuUsage();
-        var (memoryUsage, memoryUsedMB, memoryTotalMB) = GetMemoryUsage();
+        var memoryUsage = GetMemoryUsage();
         var gpuUsage = GetGpuUsage();
 
         return new PerformanceData(
             cpuUsage,
             memoryUsage,
-            gpuUsage,
-            memoryUsedMB,
-            memoryTotalMB
+            gpuUsage
         );
     }
 
     private void OnTimerCallback(object? state)
     {
-        if (!_isMonitoring) return;
+        if (!_isMonitoring)
+        {
+            return;
+        }
 
         try
         {
@@ -133,7 +134,7 @@ public class PerformanceMonitorService : IPerformanceMonitorService
         }
     }
 
-    private (double memoryUsage, long memoryUsedMB, long memoryTotalMB) GetMemoryUsage()
+    private double GetMemoryUsage()
     {
         var memoryStatus = new MEMORYSTATUSEX
         {
@@ -142,17 +143,15 @@ public class PerformanceMonitorService : IPerformanceMonitorService
 
         if (!PInvoke.GlobalMemoryStatusEx(ref memoryStatus))
         {
-            return (0.0, 0, 0);
+            return 0.0;
         }
 
         var memoryUsage = (double)memoryStatus.dwMemoryLoad;
-        var memoryUsedMB = (long)((memoryStatus.ullTotalPhys - memoryStatus.ullAvailPhys) / (1024 * 1024));
-        var memoryTotalMB = (long)(memoryStatus.ullTotalPhys / (1024 * 1024));
 
-        return (memoryUsage, memoryUsedMB, memoryTotalMB);
+        return memoryUsage;
     }
 
-    private double GetGpuUsage()
+    private double? GetGpuUsage()
     {
         try
         {
@@ -167,7 +166,7 @@ public class PerformanceMonitorService : IPerformanceMonitorService
         }
     }
 
-    private double GetGpuUsageFromPerformanceCounters()
+    private double? GetGpuUsageFromPerformanceCounters()
     {
         try
         {
@@ -182,7 +181,9 @@ public class PerformanceMonitorService : IPerformanceMonitorService
             {
                 // Open a query
                 if (PInvoke.PdhOpenQuery(string.Empty, nuint.Zero, out query) != 0)
-                    return 0.0; // No GPU on this computer?
+                {
+                    return null; // No GPU on this computer?
+                }
 
                 // Try different GPU counter paths that are commonly available
                 string[] counterPaths = {
@@ -203,18 +204,24 @@ public class PerformanceMonitorService : IPerformanceMonitorService
                 }
 
                 if (!counterAdded)
-                    return 0.0;
+                {
+                    return null;
+                }
 
                 // Collect initial data
                 if (PInvoke.PdhCollectQueryData(query) != 0)
-                    return 0.0;
+                {
+                    return null;
+                }
 
                 // Wait a bit for meaningful data
                 Thread.Sleep(200);
 
                 // Collect again for calculation
                 if (PInvoke.PdhCollectQueryData(query) != 0)
-                    return 0.0;
+                {
+                    return null;
+                }
 
                 // Get the formatted counter value
                 var value = new PDH_FMT_COUNTERVALUE();
@@ -240,14 +247,19 @@ public class PerformanceMonitorService : IPerformanceMonitorService
                     }
                 }
 
-                return 0.0;
+                return null;
             }
             finally
             {
                 if (counter != IntPtr.Zero)
+                {
                     PInvoke.PdhRemoveCounter(counter);
+                }
+
                 if (query != IntPtr.Zero)
+                {
                     PInvoke.PdhCloseQuery(query);
+                }
             }
         }
         catch (Exception ex)
@@ -259,7 +271,7 @@ public class PerformanceMonitorService : IPerformanceMonitorService
         }
     }
 
-    private double GetFallbackGpuEstimate()
+    private double? GetFallbackGpuEstimate()
     {
         try
         {
@@ -274,17 +286,23 @@ public class PerformanceMonitorService : IPerformanceMonitorService
             // Very basic heuristic: assume some GPU usage based on CPU patterns
             // This is obviously not accurate but provides some visual feedback
             if (currentCpu > 80)
+            {
                 return Math.Min(60.0, currentCpu * 0.7);
+            }
             else if (currentCpu > 50)
+            {
                 return Math.Min(40.0, currentCpu * 0.5);
+            }
             else if (currentCpu > 20)
+            {
                 return Math.Min(20.0, currentCpu * 0.3);
+            }
 
-            return 0.0;
+            return null;
         }
         catch
         {
-            return 0.0;
+            return null;
         }
     }
 

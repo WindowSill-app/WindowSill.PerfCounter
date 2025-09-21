@@ -117,25 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ClearHistory" xml:space="preserve">
-    <value>Clear History</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
-  </data>
   <data name="DisplayName" xml:space="preserve">
-    <value>Clipboard History</value>
-  </data>
-  <data name="EmptyClipboard" xml:space="preserve">
-    <value>The clipboard is empty.</value>
-  </data>
-  <data name="EnableClipboardHistory" xml:space="preserve">
-    <value>Enable Windows Clipboard history</value>
-  </data>
-  <data name="ImageSize" xml:space="preserve">
-    <value>{0} x {1} pixels</value>
-  </data>
-  <data name="OpenInWebBrowser" xml:space="preserve">
-    <value>Open in web browser</value>
+    <value>Performance Counter</value>
   </data>
 </root>

@@ -29,12 +29,12 @@ internal sealed partial class SettingsViewModel : ObservableObject
         set => _settingsProvider.SetSetting(Settings.AnimationMetric, value);
     }
 
-    public bool IsAnimatedGifMode => DisplayMode == PerformanceDisplayMode.AnimatedGif;
+    public bool IsAnimatedGifMode => DisplayMode == PerformanceDisplayMode.RunningMan;
 
     public ObservableCollection<PerformanceDisplayMode> AvailableDisplayModes { get; } = new()
     {
         PerformanceDisplayMode.Percentage,
-        PerformanceDisplayMode.AnimatedGif
+        PerformanceDisplayMode.RunningMan
     };
 
     public ObservableCollection<PerformanceMetric> AvailableMetrics { get; } = new()

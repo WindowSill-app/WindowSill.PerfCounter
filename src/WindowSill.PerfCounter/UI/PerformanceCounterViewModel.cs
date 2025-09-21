@@ -18,7 +18,7 @@ public partial class PerformanceCounterViewModel : ObservableObject
     private double memoryUsage;
 
     [ObservableProperty]
-    private double gpuUsage;
+    private double? gpuUsage;
 
     [ObservableProperty]
     private long memoryUsedMB;
@@ -32,12 +32,11 @@ public partial class PerformanceCounterViewModel : ObservableObject
     [ObservableProperty]
     private double animationSpeed = 1.0;
 
-    // Computed properties for UI binding
-    public string CpuText => $"CPU: {CpuUsage:F0}%";
-    public string MemoryText => $"RAM: {MemoryUsage:F0}%";
-    public string GpuText => $"GPU: {GpuUsage:F0}%";
-    public string MemoryDetailsText => $"Memory: {MemoryUsedMB:N0} / {MemoryTotalMB:N0} MB";
-    public string SpeedText => $"Speed: {AnimationSpeed:F1}x";
+    public string CpuText => $"{CpuUsage:F0}%";
+
+    public string MemoryText => $"{MemoryUsage:F0}%";
+
+    public string GpuText => $"{GpuUsage:F0}%";
 
     public PerformanceCounterViewModel(
         IPerformanceMonitorService performanceMonitorService,
@@ -69,12 +68,15 @@ public partial class PerformanceCounterViewModel : ObservableObject
         }
     }
 
-    public static (PerformanceCounterViewModel viewModel, PerformanceCounterView view) CreateView(
+    public static (PerformanceCounterViewModel viewModel, SillView view) CreateView(
         IPerformanceMonitorService performanceMonitorService,
-        ISettingsProvider settingsProvider)
+        ISettingsProvider settingsProvider,
+        IPluginInfo pluginInfo)
     {
         var viewModel = new PerformanceCounterViewModel(performanceMonitorService, settingsProvider);
-        var view = new PerformanceCounterView(viewModel);
+
+        var view = new SillView();
+        view.Content = new PerformanceCounterView(view, pluginInfo, viewModel);
 
         return (viewModel, view);
     }
@@ -86,8 +88,6 @@ public partial class PerformanceCounterViewModel : ObservableObject
             CpuUsage = e.Data.CpuUsage;
             MemoryUsage = e.Data.MemoryUsage;
             GpuUsage = e.Data.GpuUsage;
-            MemoryUsedMB = e.Data.MemoryUsedMB;
-            MemoryTotalMB = e.Data.MemoryTotalMB;
 
             UpdateAnimationSpeed();
 
@@ -95,8 +95,6 @@ public partial class PerformanceCounterViewModel : ObservableObject
             OnPropertyChanged(nameof(CpuText));
             OnPropertyChanged(nameof(MemoryText));
             OnPropertyChanged(nameof(GpuText));
-            OnPropertyChanged(nameof(MemoryDetailsText));
-            OnPropertyChanged(nameof(SpeedText));
         });
     }
 
@@ -129,8 +127,8 @@ public partial class PerformanceCounterViewModel : ObservableObject
                 _ => CpuUsage
             };
 
-            // Convert 0-100% to animation speed (0.1x to 3.0x)
-            AnimationSpeed = Math.Max(0.1, Math.Min(3.0, (metricValue / 100.0) * 2.9 + 0.1));
+            // Convert 0-100% to animation speed (0.1x to 1.5x)
+            AnimationSpeed = Math.Max(0.1, Math.Min(1.5, (metricValue.GetValueOrDefault(0) / 100.0) * 1.4 + 0.1));
         }
     }
 }

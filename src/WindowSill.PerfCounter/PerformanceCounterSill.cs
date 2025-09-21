@@ -1,3 +1,5 @@
+using Microsoft.UI.Xaml.Media.Imaging;
+
 using System.ComponentModel.Composition;
 
 using WindowSill.API;
@@ -14,32 +16,36 @@ public sealed class PerformanceCounterSill : ISillActivatedByDefault, ISillSingl
 {
     private readonly IPerformanceMonitorService _performanceMonitorService;
     private readonly ISettingsProvider _settingsProvider;
+    private readonly IPluginInfo _pluginInfo;
+
     private PerformanceCounterViewModel? _viewModel;
 
     [ImportingConstructor]
     internal PerformanceCounterSill(
         IPerformanceMonitorService performanceMonitorService,
-        ISettingsProvider settingsProvider)
+        ISettingsProvider settingsProvider,
+        IPluginInfo pluginInfo)
     {
         _performanceMonitorService = performanceMonitorService;
         _settingsProvider = settingsProvider;
+        _pluginInfo = pluginInfo;
 
         // Create the performance counter view
         var (viewModel, perfView) = PerformanceCounterViewModel.CreateView(
             _performanceMonitorService,
-            _settingsProvider);
+            _settingsProvider,
+            _pluginInfo);
 
         _viewModel = viewModel;
-        View = new SillView { Content = perfView };
+        View = perfView;
     }
 
-    public string DisplayName => "Performance Counter";
+    public string DisplayName => "/WindowSill.PerfCounter/Misc/DisplayName".GetLocalizedString();
 
     public IconElement CreateIcon()
-        => new FontIcon
+        => new ImageIcon
         {
-            Glyph = "\uE7C4", // Performance/Chart icon
-            FontFamily = new FontFamily("Segoe MDL2 Assets")
+            Source = new SvgImageSource(new Uri(System.IO.Path.Combine(_pluginInfo.GetPluginContentDirectory(), "Assets", "microchip.svg")))
         };
 
     public SillSettingsView[]? SettingsViews =>

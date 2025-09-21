@@ -3,9 +3,11 @@ namespace WindowSill.PerfCounter.Services;
 public interface IPerformanceMonitorService
 {
     event EventHandler<PerformanceDataEventArgs> PerformanceDataUpdated;
-    
+
     void StartMonitoring();
+
     void StopMonitoring();
+
     PerformanceData GetCurrentPerformanceData();
 }
 
@@ -22,7 +24,5 @@ public class PerformanceDataEventArgs : EventArgs
 public record PerformanceData(
     double CpuUsage,
     double MemoryUsage, 
-    double GpuUsage,
-    long MemoryUsedMB,
-    long MemoryTotalMB
+    double? GpuUsage
 );

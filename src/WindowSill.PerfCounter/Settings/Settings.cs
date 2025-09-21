@@ -5,7 +5,7 @@ namespace WindowSill.PerfCounter.Settings;
 internal static class Settings
 {
     /// <summary>
-    /// The display mode for performance metrics (Percentage or AnimatedGif)
+    /// The display mode for performance metrics (Percentage or RunningMan)
     /// </summary>
     internal static readonly SettingDefinition<PerformanceDisplayMode> DisplayMode
         = new(PerformanceDisplayMode.Percentage, typeof(Settings).Assembly);
@@ -20,7 +20,7 @@ internal static class Settings
 public enum PerformanceDisplayMode
 {
     Percentage,
-    AnimatedGif
+    RunningMan
 }
 
 public enum PerformanceMetric

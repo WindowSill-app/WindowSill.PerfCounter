@@ -6,7 +6,6 @@
         <LangVersion>preview</LangVersion>
         <PlatformTarget>AnyCPU</PlatformTarget>
         <RuntimeIdentifiers>win-x64;win-x86;win-arm64</RuntimeIdentifiers>
-        <UseWinUi>true</UseWinUi>
 
         <PackageId>WindowSill.PerfCounter</PackageId>
         <Version>0.0.1</Version>
@@ -29,6 +28,9 @@
     </PropertyGroup>
     <ItemGroup>
         <None Include="Assets/package.png" Pack="true" PackagePath="\Assets\" />
+        <None Include="Assets/memory_slot.svg" Pack="true" PackagePath="\Assets\" />
+        <None Include="Assets/microchip.svg" Pack="true" PackagePath="\Assets\" />
+        <None Include="Assets/video_card.svg" Pack="true" PackagePath="\Assets\" />
         <None Include="LICENSE.md" Pack="true" PackagePath="\" />
     </ItemGroup>
     <ItemGroup>
