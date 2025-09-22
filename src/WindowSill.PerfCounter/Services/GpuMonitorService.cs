@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using Microsoft.Win32;
 
 using Windows.Win32;
 
@@ -6,14 +7,29 @@ namespace WindowSill.PerfCounter.Services;
 
 internal class GpuMonitorService : IDisposable
 {
+    private readonly Lock _lock = new();
     private readonly List<nint> _gpuCounters = [];
+
     private nint _query = nint.Zero;
     private bool _initialized = false;
-    private readonly object _lockObject = new();
+
+    public void Dispose()
+    {
+        lock (_lock)
+        {
+            if (_query != nint.Zero)
+            {
+                PdhCloseQuery(_query);
+                _query = nint.Zero;
+            }
+            _gpuCounters.Clear();
+            _initialized = false;
+        }
+    }
 
     public double? GetGpuUsage()
     {
-        lock (_lockObject)
+        lock (_lock)
         {
             if (!_initialized && !InitializeGpuCounters())
             {
@@ -83,78 +99,109 @@ internal class GpuMonitorService : IDisposable
         }
     }
 
-    private bool HasDedicatedGpu()
+    private double? CollectGpuData()
     {
+        if (_query == nint.Zero || _gpuCounters.Count == 0)
+        {
+            return null;
+        }
+
         try
         {
-            // Use Registry-based detection - more reliable than DXGI COM
-            return CheckRegistryForDedicatedGpu() || CheckGpuCountersExist();
+            // Collect data twice with a small delay for accurate readings
+            PdhCollectQueryData(_query);
+            Thread.Sleep(100);
+            PdhCollectQueryData(_query);
+
+            double totalUsage = 0.0;
+            int validCounters = 0;
+
+            foreach (nint counter in _gpuCounters)
+            {
+                // Try to get formatted counter array first (for wildcard counters)
+                uint bufferSize = 0u;
+                uint itemCount = 0u;
+
+                uint status = PdhGetFormattedCounterArray(counter, PDH_FMT.PDH_FMT_DOUBLE,
+                    ref bufferSize, ref itemCount, nint.Zero);
+
+                if (status == PInvoke.PDH_MORE_DATA && itemCount > 0)
+                {
+                    nint buffer = Marshal.AllocHGlobal((int)bufferSize);
+                    try
+                    {
+                        status = PdhGetFormattedCounterArray(counter, PDH_FMT.PDH_FMT_DOUBLE,
+                            ref bufferSize, ref itemCount, buffer);
+
+                        if (status == 0)
+                        {
+                            // Sum up all GPU engine utilizations
+                            nint current = buffer;
+                            for (int i = 0; i < itemCount; i++)
+                            {
+                                PdhFmtCounterValueItemDouble item = Marshal.PtrToStructure<PdhFmtCounterValueItemDouble>(current);
+                                if (item.FmtValue.CStatus == PInvoke.PDH_CSTATUS_VALID_DATA)
+                                {
+                                    totalUsage += item.FmtValue.doubleValue;
+                                    validCounters++;
+                                }
+                                current = IntPtr.Add(current, Marshal.SizeOf<PdhFmtCounterValueItemDouble>());
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        Marshal.FreeHGlobal(buffer);
+                    }
+                }
+                else
+                {
+                    // Try single counter value
+                    var counterValue = new PdhFmtCounterValue();
+                    uint status2 = PdhGetFormattedCounterValue(counter, PDH_FMT.PDH_FMT_DOUBLE, nint.Zero, ref counterValue);
+
+                    if (status2 == 0 && counterValue.CStatus == 0)
+                    {
+                        totalUsage += counterValue.doubleValue;
+                        validCounters++;
+                    }
+                }
+            }
+
+            // Return average usage, clamped between 0 and 100
+            return Math.Max(0.0, Math.Min(100.0, totalUsage));
         }
         catch
         {
-            // If Registry fails, fall back to checking if GPU performance counters exist
-            return CheckGpuCountersExist();
+            return null;
         }
     }
 
-    private bool CheckRegistryForDedicatedGpu()
+    private static bool HasDedicatedGpu()
     {
         try
         {
             // Check the Windows Registry for installed display adapters
-            nint hKey = nint.Zero;
+            using RegistryKey? displayAdaptersKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}");
 
-            // Open the display adapter registry key
-            uint result = RegOpenKeyEx(
-                HKEY_LOCAL_MACHINE,
-                "SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e968-e325-11ce-bfc1-08002be10318}",
-                0,
-                KEY_READ,
-                out hKey);
-
-            if (result != ERROR_SUCCESS || hKey == nint.Zero)
+            if (displayAdaptersKey == null)
             {
                 return false;
             }
 
-            try
+            foreach (string subKeyName in displayAdaptersKey.GetSubKeyNames())
             {
-                uint index = 0;
-                char[] subKeyName = new char[256];
-
-                while (true)
+                // Skip non-numeric subkeys (like "Properties")
+                if (!subKeyName.All(char.IsDigit))
                 {
-                    uint subKeyNameSize = (uint)subKeyName.Length;
-
-                    result = RegEnumKeyEx(hKey, index, subKeyName, ref subKeyNameSize,
-                        nint.Zero, null, nint.Zero, nint.Zero);
-
-                    if (result != ERROR_SUCCESS)
-                    {
-                        break;
-                    }
-
-                    string subKey = new string(subKeyName, 0, (int)subKeyNameSize);
-
-                    // Skip non-numeric subkeys (like "Properties")
-                    if (!subKey.All(char.IsDigit))
-                    {
-                        index++;
-                        continue;
-                    }
-
-                    // Check this adapter
-                    if (IsAdapterDedicated(hKey, subKey))
-                    {
-                        return true;
-                    }
-
-                    index++;
+                    continue;
                 }
-            }
-            finally
-            {
-                RegCloseKey(hKey);
+
+                // Check this adapter
+                if (IsAdapterDedicated(displayAdaptersKey, subKeyName))
+                {
+                    return true;
+                }
             }
         }
         catch
@@ -165,76 +212,30 @@ internal class GpuMonitorService : IDisposable
         return false;
     }
 
-    private bool IsAdapterDedicated(nint parentKey, string subKeyName)
+    private static bool IsAdapterDedicated(RegistryKey parentKey, string subKeyName)
     {
         try
         {
-            nint adapterKey = nint.Zero;
-            uint result = RegOpenKeyEx(parentKey, subKeyName, 0, KEY_READ, out adapterKey);
-
-            if (result != ERROR_SUCCESS || adapterKey == nint.Zero)
+            using RegistryKey? adapterKey = parentKey.OpenSubKey(subKeyName);
+            if (adapterKey == null)
             {
                 return false;
             }
 
-            try
-            {
-                // Get adapter description
-                string description = GetRegistryString(adapterKey, "DriverDesc") ?? "";
-                string hardwareId = GetRegistryString(adapterKey, "MatchingDeviceId") ?? "";
+            // Get adapter description
+            string description = adapterKey.GetValue("DriverDesc") as string ?? "";
+            string hardwareId = adapterKey.GetValue("MatchingDeviceId") as string ?? "";
 
-                // Combine for analysis
-                string adapterInfo = $"{description} {hardwareId}".ToUpperInvariant();
+            // Combine for analysis
+            string adapterInfo = $"{description} {hardwareId}".ToUpperInvariant();
 
-                // Check for dedicated GPU indicators
-                return IsDedicatedGpuByDescription(adapterInfo);
-            }
-            finally
-            {
-                RegCloseKey(adapterKey);
-            }
+            // Check for dedicated GPU indicators
+            return IsDedicatedGpuByDescription(adapterInfo);
         }
         catch
         {
             return false;
         }
-    }
-
-    private string? GetRegistryString(nint hKey, string valueName)
-    {
-        try
-        {
-            uint type = 0;
-            uint dataSize = 0;
-
-            // Get the size first
-            uint result = RegQueryValueEx(hKey, valueName, nint.Zero, ref type, nint.Zero, ref dataSize);
-            if (result != ERROR_SUCCESS || dataSize == 0)
-            {
-                return null;
-            }
-
-            // Allocate buffer and get the actual data
-            nint buffer = Marshal.AllocHGlobal((int)dataSize);
-            try
-            {
-                result = RegQueryValueEx(hKey, valueName, nint.Zero, ref type, buffer, ref dataSize);
-                if (result == ERROR_SUCCESS && type == REG_SZ)
-                {
-                    return Marshal.PtrToStringUni(buffer);
-                }
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(buffer);
-            }
-        }
-        catch
-        {
-            // Ignore errors
-        }
-
-        return null;
     }
 
     private static bool IsDedicatedGpuByDescription(string adapterInfo)
@@ -255,21 +256,6 @@ internal class GpuMonitorService : IDisposable
             }
         }
 
-        // Check for integrated GPU patterns to exclude
-        string[] integratedKeywords = {
-            "INTEL HD", "INTEL UHD", "INTEL IRIS",
-            "AMD RADEON GRAPHICS", "RADEON VEGA",
-            "INTEGRATED", "ONBOARD"
-        };
-
-        foreach (string keyword in integratedKeywords)
-        {
-            if (adapterInfo.Contains(keyword))
-            {
-                return false;
-            }
-        }
-
         // If it contains VEN_ vendor IDs for known dedicated GPU vendors, it's likely dedicated
         if (adapterInfo.Contains("VEN_10DE") || // NVIDIA
             (adapterInfo.Contains("VEN_1002") && !adapterInfo.Contains("RADEON GRAPHICS"))) // AMD (but not APU)
@@ -278,34 +264,6 @@ internal class GpuMonitorService : IDisposable
         }
 
         return false;
-    }
-
-    private bool CheckGpuCountersExist()
-    {
-        try
-        {
-            // Try to check if GPU Engine performance object exists
-            uint counterListSize = 0u;
-            uint instanceListSize = 0u;
-
-            uint status = PdhEnumObjectItems(
-                null,
-                null,
-                "GPU Engine",
-                nint.Zero,
-                ref counterListSize,
-                nint.Zero,
-                ref instanceListSize,
-                PERF_DETAIL.PERF_DETAIL_WIZARD,
-                0);
-
-            // If GPU Engine object exists and has instances, likely has dedicated GPU
-            return status == PInvoke.PDH_MORE_DATA && instanceListSize > 0;
-        }
-        catch
-        {
-            return false;
-        }
     }
 
     private static List<string> EnumerateGpuEngineInstances()
@@ -392,98 +350,6 @@ internal class GpuMonitorService : IDisposable
         ];
     }
 
-    private double? CollectGpuData()
-    {
-        if (_query == nint.Zero || _gpuCounters.Count == 0)
-        {
-            return null;
-        }
-
-        try
-        {
-            // Collect data twice with a small delay for accurate readings
-            PdhCollectQueryData(_query);
-            Thread.Sleep(100);
-            PdhCollectQueryData(_query);
-
-            double totalUsage = 0.0;
-            int validCounters = 0;
-
-            foreach (nint counter in _gpuCounters)
-            {
-                // Try to get formatted counter array first (for wildcard counters)
-                uint bufferSize = 0u;
-                uint itemCount = 0u;
-
-                uint status = PdhGetFormattedCounterArray(counter, PDH_FMT.PDH_FMT_DOUBLE,
-                    ref bufferSize, ref itemCount, nint.Zero);
-
-                if (status == PInvoke.PDH_MORE_DATA && itemCount > 0)
-                {
-                    nint buffer = Marshal.AllocHGlobal((int)bufferSize);
-                    try
-                    {
-                        status = PdhGetFormattedCounterArray(counter, PDH_FMT.PDH_FMT_DOUBLE,
-                            ref bufferSize, ref itemCount, buffer);
-
-                        if (status == 0)
-                        {
-                            // Sum up all GPU engine utilizations
-                            nint current = buffer;
-                            for (int i = 0; i < itemCount; i++)
-                            {
-                                PdhFmtCounterValueItemDouble item = Marshal.PtrToStructure<PdhFmtCounterValueItemDouble>(current);
-                                if (item.FmtValue.CStatus == PInvoke.PDH_CSTATUS_VALID_DATA)
-                                {
-                                    totalUsage += item.FmtValue.doubleValue;
-                                    validCounters++;
-                                }
-                                current = IntPtr.Add(current, Marshal.SizeOf<PdhFmtCounterValueItemDouble>());
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        Marshal.FreeHGlobal(buffer);
-                    }
-                }
-                else
-                {
-                    // Try single counter value
-                    var counterValue = new PdhFmtCounterValue();
-                    uint status2 = PdhGetFormattedCounterValue(counter, PDH_FMT.PDH_FMT_DOUBLE, nint.Zero, ref counterValue);
-
-                    if (status2 == 0 && counterValue.CStatus == 0)
-                    {
-                        totalUsage += counterValue.doubleValue;
-                        validCounters++;
-                    }
-                }
-            }
-
-            // Return average usage, clamped between 0 and 100
-            return Math.Max(0.0, Math.Min(100.0, totalUsage));
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    public void Dispose()
-    {
-        lock (_lockObject)
-        {
-            if (_query != nint.Zero)
-            {
-                PdhCloseQuery(_query);
-                _query = nint.Zero;
-            }
-            _gpuCounters.Clear();
-            _initialized = false;
-        }
-    }
-
     #region PDH P/Invoke Declarations
 
     [StructLayout(LayoutKind.Sequential)]
@@ -544,29 +410,6 @@ internal class GpuMonitorService : IDisposable
         ref uint pcchInstanceListLength,
         PERF_DETAIL dwDetailLevel,
         uint dwFlags);
-
-    #endregion
-
-    #region Registry P/Invoke Declarations
-
-    private static readonly nint HKEY_LOCAL_MACHINE = new nint(0x80000002);
-    private const uint KEY_READ = 0x20019;
-    private const uint ERROR_SUCCESS = 0;
-    private const uint REG_SZ = 1;
-
-    [DllImport("advapi32.dll", CharSet = CharSet.Unicode)]
-    private static extern uint RegOpenKeyEx(nint hKey, string subKey, uint options, uint samDesired, out nint phkResult);
-
-    [DllImport("advapi32.dll", CharSet = CharSet.Unicode)]
-    private static extern uint RegEnumKeyEx(nint hKey, uint dwIndex, char[] lpName, ref uint lpcchName,
-        nint lpReserved, char[]? lpClass, nint lpcchClass, nint lpftLastWriteTime);
-
-    [DllImport("advapi32.dll", CharSet = CharSet.Unicode)]
-    private static extern uint RegQueryValueEx(nint hKey, string lpValueName, nint lpReserved,
-        ref uint lpType, nint lpData, ref uint lpcbData);
-
-    [DllImport("advapi32.dll")]
-    private static extern uint RegCloseKey(nint hKey);
 
     #endregion
 }
