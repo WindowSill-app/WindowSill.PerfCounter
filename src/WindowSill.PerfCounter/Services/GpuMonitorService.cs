@@ -1,4 +1,4 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 using Windows.Win32;
 
@@ -11,13 +11,13 @@ internal class GpuMonitorService : IDisposable
     private bool _initialized = false;
     private readonly object _lockObject = new();
 
-    public double GetGpuUsage()
+    public double? GetGpuUsage()
     {
         lock (_lockObject)
         {
             if (!_initialized && !InitializeGpuCounters())
             {
-                return 0.0;
+                return null;
             }
 
             return CollectGpuData();
@@ -159,11 +159,11 @@ internal class GpuMonitorService : IDisposable
         ];
     }
 
-    private double CollectGpuData()
+    private double? CollectGpuData()
     {
         if (_query == nint.Zero || _gpuCounters.Count == 0)
         {
-            return 0.0;
+            return null;
         }
 
         try
@@ -233,7 +233,7 @@ internal class GpuMonitorService : IDisposable
         }
         catch
         {
-            return 0.0;
+            return null;
         }
     }
 

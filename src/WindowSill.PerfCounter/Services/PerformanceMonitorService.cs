@@ -1,4 +1,4 @@
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Runtime.InteropServices;
 
 using Windows.Win32;
@@ -64,7 +64,7 @@ public class PerformanceMonitorService : IPerformanceMonitorService, IDisposable
     {
         var cpuUsage = GetCpuUsage();
         var memoryUsage = GetMemoryUsage();
-        var gpuUsage = GetGpuUsage();
+        var gpuUsage = _gpuMonitor.GetGpuUsage();
 
         return new PerformanceData(
             cpuUsage,
@@ -157,20 +157,6 @@ public class PerformanceMonitorService : IPerformanceMonitorService, IDisposable
         var memoryUsage = (double)memoryStatus.dwMemoryLoad;
 
         return memoryUsage;
-    }
-
-    private double GetGpuUsage()
-    {
-        try
-        {
-            return _gpuMonitor.GetGpuUsage();
-        }
-        catch (Exception ex)
-        {
-            // Log error but continue monitoring
-            System.Diagnostics.Debug.WriteLine($"Error getting GPU usage: {ex.Message}");
-            return 0.0;
-        }
     }
 
     private static ulong FileTimeToUInt64(FILETIME fileTime)
