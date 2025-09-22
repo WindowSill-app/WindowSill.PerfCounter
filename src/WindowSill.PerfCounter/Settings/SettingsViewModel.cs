@@ -20,6 +20,19 @@ internal sealed partial class SettingsViewModel : ObservableObject
         {
             _settingsProvider.SetSetting(Settings.DisplayMode, value);
             OnPropertyChanged(nameof(IsAnimatedGifMode));
+            OnPropertyChanged(nameof(SelectedDisplayModeItem));
+        }
+    }
+
+    public DisplayModeItem? SelectedDisplayModeItem
+    {
+        get => AvailableDisplayModeItems.FirstOrDefault(item => item.Value == DisplayMode);
+        set
+        {
+            if (value != null)
+            {
+                DisplayMode = value.Value;
+            }
         }
     }
 
@@ -31,16 +44,16 @@ internal sealed partial class SettingsViewModel : ObservableObject
 
     public bool IsAnimatedGifMode => DisplayMode == PerformanceDisplayMode.RunningMan;
 
-    public ObservableCollection<PerformanceDisplayMode> AvailableDisplayModes { get; } = new()
-    {
-        PerformanceDisplayMode.Percentage,
-        PerformanceDisplayMode.RunningMan
-    };
+    public ObservableCollection<DisplayModeItem> AvailableDisplayModeItems { get; } =
+    [
+        new DisplayModeItem(PerformanceDisplayMode.Percentage, "/WindowSill.PerfCounter/Settings/DisplayModePercentage".GetLocalizedString()),
+        new DisplayModeItem(PerformanceDisplayMode.RunningMan, "/WindowSill.PerfCounter/Settings/DisplayModeRunningMan".GetLocalizedString())
+    ];
 
-    public ObservableCollection<PerformanceMetric> AvailableMetrics { get; } = new()
-    {
+    public ObservableCollection<PerformanceMetric> AvailableMetrics { get; } =
+    [
         PerformanceMetric.CPU,
         PerformanceMetric.GPU,
         PerformanceMetric.RAM
-    };
+    ];
 }

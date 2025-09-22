@@ -19,27 +19,27 @@ internal sealed class SettingsView : UserControl
                         new TextBlock()
                             .Style(x => x.ThemeResource("BodyStrongTextBlockStyle"))
                             .Margin(0, 0, 0, 8)
-                            .Text("Display Settings"),
+                            .Text("/WindowSill.PerfCounter/Settings/General".GetLocalizedString()),
 
                         new SettingsCard()
-                            .Header("Display Mode")
-                            .Description("Choose how to display performance metrics")
+                            .Header("/WindowSill.PerfCounter/Settings/DisplayMode".GetLocalizedString())
+                            .Description("/WindowSill.PerfCounter/Settings/DisplayModeDescription".GetLocalizedString())
                             .HeaderIcon(
                                 new FontIcon()
                                     .Glyph("\uE7C4")
                             )
                             .Content(
                                 new ComboBox()
-                                    .SelectedItem(x => x.Binding(() => viewModel.DisplayMode)
+                                    .SelectedItem(x => x.Binding(() => viewModel.SelectedDisplayModeItem)
                                                         .TwoWay()
                                                         .UpdateSourceTrigger(UpdateSourceTrigger.PropertyChanged))
-                                    .ItemsSource(x => x.Binding(() => viewModel.AvailableDisplayModes))
+                                    .ItemsSource(x => x.Binding(() => viewModel.AvailableDisplayModeItems))
                                     .Width(150)
                             ),
 
                         new SettingsCard()
-                            .Header("Animation Metric")
-                            .Description("Which metric to use for animated GIF speed")
+                            .Header("/WindowSill.PerfCounter/Settings/AnimationMetric".GetLocalizedString())
+                            .Description("/WindowSill.PerfCounter/Settings/AnimationMetricDescription".GetLocalizedString())
                             .Visibility(x => x.Binding(() => viewModel.IsAnimatedGifMode)
                                               .OneWay()
                                               .Convert(isAnimated => isAnimated ? Visibility.Visible : Visibility.Collapsed))
@@ -57,8 +57,8 @@ internal sealed class SettingsView : UserControl
                             ),
 
                         _openTaskManagerCard
-                            .Header("Open Task Manager")
-                            .Description("Click to open Windows Task Manager for detailed system information")
+                            .Header("/WindowSill.PerfCounter/Settings/OpenTaskManager".GetLocalizedString())
+                            .Description("/WindowSill.PerfCounter/Settings/OpenTaskManagerDescription".GetLocalizedString())
                             .HeaderIcon(
                                 new FontIcon()
                                     .Glyph("\uE7EF")
@@ -77,17 +77,6 @@ internal sealed class SettingsView : UserControl
 
     private void OpenTaskManagerCard_Click(object sender, RoutedEventArgs e)
     {
-        try
-        {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = "taskmgr.exe",
-                UseShellExecute = true
-            });
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Failed to open Task Manager: {ex.Message}");
-        }
+        TaskManagerLauncher.OpenTaskManager();
     }
 }
