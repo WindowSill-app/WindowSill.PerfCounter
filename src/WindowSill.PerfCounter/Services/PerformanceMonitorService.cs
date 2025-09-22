@@ -62,9 +62,9 @@ public class PerformanceMonitorService : IPerformanceMonitorService, IDisposable
 
     public PerformanceData GetCurrentPerformanceData()
     {
-        var cpuUsage = GetCpuUsage();
-        var memoryUsage = GetMemoryUsage();
-        var gpuUsage = _gpuMonitor.GetGpuUsage();
+        double cpuUsage = GetCpuUsage();
+        double memoryUsage = GetMemoryUsage();
+        double? gpuUsage = _gpuMonitor.GetGpuUsage();
 
         return new PerformanceData(
             cpuUsage,
@@ -82,7 +82,7 @@ public class PerformanceMonitorService : IPerformanceMonitorService, IDisposable
 
         try
         {
-            var performanceData = GetCurrentPerformanceData();
+            PerformanceData performanceData = GetCurrentPerformanceData();
             PerformanceDataUpdated?.Invoke(this, new PerformanceDataEventArgs(performanceData));
         }
         catch (Exception ex)
@@ -116,16 +116,16 @@ public class PerformanceMonitorService : IPerformanceMonitorService, IDisposable
                 return 0.0;
             }
 
-            var currentIdleTime = FileTimeToUInt64(idleTime);
-            var currentKernelTime = FileTimeToUInt64(kernelTime);
-            var currentUserTime = FileTimeToUInt64(userTime);
+            ulong currentIdleTime = FileTimeToUInt64(idleTime);
+            ulong currentKernelTime = FileTimeToUInt64(kernelTime);
+            ulong currentUserTime = FileTimeToUInt64(userTime);
 
-            var idleDiff = currentIdleTime - _lastIdleTime;
-            var kernelDiff = currentKernelTime - _lastKernelTime;
-            var userDiff = currentUserTime - _lastUserTime;
+            ulong idleDiff = currentIdleTime - _lastIdleTime;
+            ulong kernelDiff = currentKernelTime - _lastKernelTime;
+            ulong userDiff = currentUserTime - _lastUserTime;
 
-            var totalSys = kernelDiff + userDiff;
-            var totalCpu = totalSys - idleDiff;
+            ulong totalSys = kernelDiff + userDiff;
+            ulong totalCpu = totalSys - idleDiff;
 
             double cpuUsage = 0.0;
             if (totalSys > 0)
@@ -142,7 +142,7 @@ public class PerformanceMonitorService : IPerformanceMonitorService, IDisposable
         }
     }
 
-    private double GetMemoryUsage()
+    private static double GetMemoryUsage()
     {
         var memoryStatus = new MEMORYSTATUSEX
         {
@@ -154,7 +154,7 @@ public class PerformanceMonitorService : IPerformanceMonitorService, IDisposable
             return 0.0;
         }
 
-        var memoryUsage = (double)memoryStatus.dwMemoryLoad;
+        double memoryUsage = (double)memoryStatus.dwMemoryLoad;
 
         return memoryUsage;
     }

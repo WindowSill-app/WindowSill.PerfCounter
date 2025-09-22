@@ -1,4 +1,4 @@
-using Microsoft.UI.Xaml.Media.Imaging;
+﻿using Microsoft.UI.Xaml.Media.Imaging;
 
 using System.ComponentModel.Composition;
 
@@ -31,7 +31,7 @@ public sealed class PerformanceCounterSill : ISillActivatedByDefault, ISillSingl
         _pluginInfo = pluginInfo;
 
         // Create the performance counter view
-        var (viewModel, perfView) = PerformanceCounterViewModel.CreateView(
+        (PerformanceCounterViewModel? viewModel, SillView? perfView) = PerformanceCounterViewModel.CreateView(
             _performanceMonitorService,
             _settingsProvider,
             _pluginInfo);

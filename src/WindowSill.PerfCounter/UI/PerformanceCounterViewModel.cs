@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WindowSill.API;
 using WindowSill.PerfCounter.Services;
@@ -110,7 +110,7 @@ public partial class PerformanceCounterViewModel : ObservableObject
 
     private void UpdateDisplayMode()
     {
-        var displayMode = _settingsProvider.GetSetting(Settings.Settings.DisplayMode);
+        PerformanceDisplayMode displayMode = _settingsProvider.GetSetting(Settings.Settings.DisplayMode);
         IsPercentageMode = displayMode == PerformanceDisplayMode.Percentage;
     }
 
@@ -118,8 +118,8 @@ public partial class PerformanceCounterViewModel : ObservableObject
     {
         if (!IsPercentageMode)
         {
-            var animationMetric = _settingsProvider.GetSetting(Settings.Settings.AnimationMetric);
-            var metricValue = animationMetric switch
+            PerformanceMetric animationMetric = _settingsProvider.GetSetting(Settings.Settings.AnimationMetric);
+            double? metricValue = animationMetric switch
             {
                 PerformanceMetric.CPU => CpuUsage,
                 PerformanceMetric.GPU => GpuUsage,
