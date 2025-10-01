@@ -8,18 +8,21 @@
         <RuntimeIdentifiers>win-x64;win-x86;win-arm64</RuntimeIdentifiers>
 
         <PackageId>WindowSill.PerfCounter</PackageId>
-        <Version>0.5.0</Version>
+        <Version>0.6.1</Version>
         <Authors>Etienne Baudoux</Authors>
         <Title>Perf Counter</Title>
         <Description>
-            Monitor your computer performance in real-time with WindowSill Perf Counter. No need to open Task Manager anymore! Just a quick look in a corner of the screen to find out when the CPU spikes.
+          Monitor your computer performance in real-time with WindowSill Perf Counter. No need to open Task Manager anymore! Just a quick look in a corner of the screen to find out when the CPU spikes.
 
-            Key features:
+          Key features:
 
-            - Shows average CPU/GPU/RAM utilization across all system cores
-            - Updates every second in real time
-            - Multiple display modes: percentage view or animation
-            - Click on the sill to quickly open Task Manager
+          - Shows average CPU/GPU/RAM utilization across all system cores
+          - Updates every second in real time
+          - Multiple display modes: percentage view or animation
+          - Click on the sill to quickly open Task Manager
+
+          What's new:
+          - Added translation for French
         </Description>
         <PackageIcon>Assets/package.png</PackageIcon>
         <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
