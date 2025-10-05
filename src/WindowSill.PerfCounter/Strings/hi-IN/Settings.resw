@@ -118,30 +118,30 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AnimationMetric" xml:space="preserve">
-    <value>Animation Metric</value>
+    <value>एनिमेशन मेट्रिक</value>
   </data>
   <data name="AnimationMetricDescription" xml:space="preserve">
-    <value>Which metric to use for animated running man</value>
+    <value>एनिमेटेड रनिंग मैन के लिए कौन सा मेट्रिक का उपयोग करें</value>
   </data>
   <data name="DisplayMode" xml:space="preserve">
-    <value>Display Mode</value>
+    <value>डिस्प्ले मोड</value>
   </data>
   <data name="DisplayModeDescription" xml:space="preserve">
-    <value>Choose how to display performance metrics</value>
+    <value>प्रदर्शन मेट्रिक्स कैसे दिखाएं, चुनें</value>
   </data>
   <data name="DisplayModePercentage" xml:space="preserve">
-    <value>Percentage</value>
+    <value>प्रतिशत</value>
   </data>
   <data name="DisplayModeRunningMan" xml:space="preserve">
-    <value>Running Man</value>
+    <value>रनिंग मैन</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>General</value>
+    <value>सामान्य</value>
   </data>
   <data name="OpenTaskManager" xml:space="preserve">
-    <value>Open Task Manager</value>
+    <value>टास्क मैनेजर खोलें</value>
   </data>
   <data name="OpenTaskManagerDescription" xml:space="preserve">
-    <value>Click to open Windows Task Manager for detailed system information</value>
+    <value>विंडोज टास्क मैनेजर खोलने के लिए क्लिक करें, ताकि विस्तृत सिस्टम जानकारी प्राप्त हो सके</value>
   </data>
 </root>
