@@ -118,30 +118,30 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AnimationMetric" xml:space="preserve">
-    <value>Métrique d’animation</value>
+    <value>Chỉ số Hoạt hình</value>
   </data>
   <data name="AnimationMetricDescription" xml:space="preserve">
-    <value>Quelle métrique utiliser pour l’homme qui court animé</value>
+    <value>Chỉ số nào để sử dụng cho người chạy bộ hoạt hình</value>
   </data>
   <data name="DisplayMode" xml:space="preserve">
-    <value>Mode d’affichage</value>
+    <value>Chế độ Hiển thị</value>
   </data>
   <data name="DisplayModeDescription" xml:space="preserve">
-    <value>Choisir comment afficher les métriques de performance</value>
+    <value>Chọn cách hiển thị các chỉ số hiệu suất</value>
   </data>
   <data name="DisplayModePercentage" xml:space="preserve">
-    <value>Pourcentage</value>
+    <value>Phần trăm</value>
   </data>
   <data name="DisplayModeRunningMan" xml:space="preserve">
-    <value>Homme qui court</value>
+    <value>Người chạy bộ</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>Général</value>
+    <value> Chung </value>
   </data>
   <data name="OpenTaskManager" xml:space="preserve">
-    <value>Ouvrir le Gestionnaire des tâches</value>
+    <value>Mở Trình Quản lý Nhiệm vụ</value>
   </data>
   <data name="OpenTaskManagerDescription" xml:space="preserve">
-    <value>Cliquez pour ouvrir le Gestionnaire des tâches Windows pour des informations système détaillées</value>
+    <value>Nhấp để mở Trình Quản lý Nhiệm vụ của Windows để xem chi tiết thông tin hệ thống</value>
   </data>
 </root>

@@ -118,30 +118,30 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AnimationMetric" xml:space="preserve">
-    <value>Métrique d’animation</value>
+    <value>動畫指標</value>
   </data>
   <data name="AnimationMetricDescription" xml:space="preserve">
-    <value>Quelle métrique utiliser pour l’homme qui court animé</value>
+    <value>用於動畫跑步人物的指標</value>
   </data>
   <data name="DisplayMode" xml:space="preserve">
-    <value>Mode d’affichage</value>
+    <value>顯示模式</value>
   </data>
   <data name="DisplayModeDescription" xml:space="preserve">
-    <value>Choisir comment afficher les métriques de performance</value>
+    <value>選擇如何顯示性能指標</value>
   </data>
   <data name="DisplayModePercentage" xml:space="preserve">
-    <value>Pourcentage</value>
+    <value>比例</value>
   </data>
   <data name="DisplayModeRunningMan" xml:space="preserve">
-    <value>Homme qui court</value>
+    <value>跑步人物</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>Général</value>
+    <value>一般</value>
   </data>
   <data name="OpenTaskManager" xml:space="preserve">
-    <value>Ouvrir le Gestionnaire des tâches</value>
+    <value>開啟任務管理員</value>
   </data>
   <data name="OpenTaskManagerDescription" xml:space="preserve">
-    <value>Cliquez pour ouvrir le Gestionnaire des tâches Windows pour des informations système détaillées</value>
+    <value>點選開啟 Windows 任務管理員以取得詳細系統資訊</value>
   </data>
 </root>

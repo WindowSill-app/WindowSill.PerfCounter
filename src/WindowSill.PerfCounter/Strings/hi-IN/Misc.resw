@@ -117,31 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AnimationMetric" xml:space="preserve">
-    <value>Métrique d’animation</value>
-  </data>
-  <data name="AnimationMetricDescription" xml:space="preserve">
-    <value>Quelle métrique utiliser pour l’homme qui court animé</value>
-  </data>
-  <data name="DisplayMode" xml:space="preserve">
-    <value>Mode d’affichage</value>
-  </data>
-  <data name="DisplayModeDescription" xml:space="preserve">
-    <value>Choisir comment afficher les métriques de performance</value>
-  </data>
-  <data name="DisplayModePercentage" xml:space="preserve">
-    <value>Pourcentage</value>
-  </data>
-  <data name="DisplayModeRunningMan" xml:space="preserve">
-    <value>Homme qui court</value>
-  </data>
-  <data name="General" xml:space="preserve">
-    <value>Général</value>
-  </data>
-  <data name="OpenTaskManager" xml:space="preserve">
-    <value>Ouvrir le Gestionnaire des tâches</value>
-  </data>
-  <data name="OpenTaskManagerDescription" xml:space="preserve">
-    <value>Cliquez pour ouvrir le Gestionnaire des tâches Windows pour des informations système détaillées</value>
+  <data name="DisplayName" xml:space="preserve">
+    <value>प्रदर्शन काउंटर</value>
   </data>
 </root>
