@@ -118,30 +118,30 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AnimationMetric" xml:space="preserve">
-    <value>Animation Metric</value>
+    <value>Métrica de animación</value>
   </data>
   <data name="AnimationMetricDescription" xml:space="preserve">
-    <value>Which metric to use for animated running man</value>
+    <value>Qué métrica usar para el hombre corriendo animado</value>
   </data>
   <data name="DisplayMode" xml:space="preserve">
-    <value>Display Mode</value>
+    <value>Modo de visualización</value>
   </data>
   <data name="DisplayModeDescription" xml:space="preserve">
-    <value>Choose how to display performance metrics</value>
+    <value>Elegir cómo mostrar las métricas de rendimiento</value>
   </data>
   <data name="DisplayModePercentage" xml:space="preserve">
-    <value>Percentage</value>
+    <value>Porcentaje</value>
   </data>
   <data name="DisplayModeRunningMan" xml:space="preserve">
-    <value>Running Man</value>
+    <value>Hombre corriendo</value>
   </data>
   <data name="General" xml:space="preserve">
     <value>General</value>
   </data>
   <data name="OpenTaskManager" xml:space="preserve">
-    <value>Open Task Manager</value>
+    <value>Abrir Administrador de tareas</value>
   </data>
   <data name="OpenTaskManagerDescription" xml:space="preserve">
-    <value>Click to open Windows Task Manager for detailed system information</value>
+    <value>Haz clic para abrir el Administrador de tareas de Windows para obtener información detallada del sistema</value>
   </data>
 </root>
