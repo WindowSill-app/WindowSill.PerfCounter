@@ -118,30 +118,30 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AnimationMetric" xml:space="preserve">
-    <value>Métrique d’animation</value>
+    <value>アニメーションの指標</value>
   </data>
   <data name="AnimationMetricDescription" xml:space="preserve">
-    <value>Quelle métrique utiliser pour l’homme qui court animé</value>
+    <value>アニメーション実行中の男性のために使用する指標</value>
   </data>
   <data name="DisplayMode" xml:space="preserve">
-    <value>Mode d’affichage</value>
+    <value>表示モード</value>
   </data>
   <data name="DisplayModeDescription" xml:space="preserve">
-    <value>Choisir comment afficher les métriques de performance</value>
+    <value>パフォーマンス指標の表示方法を選択してください</value>
   </data>
   <data name="DisplayModePercentage" xml:space="preserve">
-    <value>Pourcentage</value>
+    <value>割合</value>
   </data>
   <data name="DisplayModeRunningMan" xml:space="preserve">
-    <value>Homme qui court</value>
+    <value>ランニングマン</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>Général</value>
+    <value>一般</value>
   </data>
   <data name="OpenTaskManager" xml:space="preserve">
-    <value>Ouvrir le Gestionnaire des tâches</value>
+    <value>タスクマネージャーを開く</value>
   </data>
   <data name="OpenTaskManagerDescription" xml:space="preserve">
-    <value>Cliquez pour ouvrir le Gestionnaire des tâches Windows pour des informations système détaillées</value>
+    <value>詳細なシステム情報のためにWindowsのタスクマネージャーを開くにはクリックしてください</value>
   </data>
 </root>
