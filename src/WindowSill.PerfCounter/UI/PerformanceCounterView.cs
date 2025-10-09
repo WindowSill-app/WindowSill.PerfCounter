@@ -32,7 +32,6 @@ public sealed class PerformanceCounterView : Button
             .Content(
                 new Grid()
                     .Children(
-                        // Percentage mode panel
                         new SillOrientedStackPanel()
                             .VerticalAlignment(VerticalAlignment.Center)
                             .Spacing(8)
@@ -81,7 +80,6 @@ public sealed class PerformanceCounterView : Button
                                     )
                             ),
 
-                        // Animated mode panel
                         _animatedVisualPlayer
                             .Width(24)
                             .Visibility(x => x.Binding(() => vm.IsPercentageMode)
