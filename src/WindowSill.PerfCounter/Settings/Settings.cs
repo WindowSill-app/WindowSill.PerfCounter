@@ -15,6 +15,12 @@ internal static class Settings
     /// </summary>
     internal static readonly SettingDefinition<PerformanceMetric> AnimationMetric
         = new(PerformanceMetric.CPU, typeof(Settings).Assembly);
+        
+    /// <summary>
+    /// Whether to enable launching Task Manager when clicking the performance counter
+    /// </summary>
+    internal static readonly SettingDefinition<bool> EnableTaskManagerLaunch
+        = new(true, typeof(Settings).Assembly);
 }
 
 public enum PerformanceDisplayMode

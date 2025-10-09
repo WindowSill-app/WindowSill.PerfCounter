@@ -6,9 +6,11 @@ namespace WindowSill.PerfCounter.Settings;
 internal sealed class SettingsView : UserControl
 {
     private readonly SettingsCard _openTaskManagerCard = new();
+    private readonly ISettingsProvider _settingsProvider;
 
     public SettingsView(ISettingsProvider settingsProvider)
     {
+        _settingsProvider = settingsProvider;
         this.DataContext(
             new SettingsViewModel(settingsProvider),
             (view, viewModel) => view
@@ -56,6 +58,20 @@ internal sealed class SettingsView : UserControl
                                     .Width(150)
                             ),
 
+                        new SettingsCard()
+                            .Header("/WindowSill.PerfCounter/Settings/EnableTaskManagerLaunch".GetLocalizedString())
+                            .Description("/WindowSill.PerfCounter/Settings/EnableTaskManagerLaunchDescription".GetLocalizedString())
+                            .HeaderIcon(
+                                new FontIcon()
+                                    .Glyph("\uE7EF")
+                            )
+                            .Content(
+                                new ToggleSwitch()
+                                    .IsOn(x => x.Binding(() => viewModel.EnableTaskManagerLaunch)
+                                                .TwoWay()
+                                                .UpdateSourceTrigger(UpdateSourceTrigger.PropertyChanged))
+                            ),
+
                         _openTaskManagerCard
                             .Header("/WindowSill.PerfCounter/Settings/OpenTaskManager".GetLocalizedString())
                             .Description("/WindowSill.PerfCounter/Settings/OpenTaskManagerDescription".GetLocalizedString())
@@ -77,6 +93,6 @@ internal sealed class SettingsView : UserControl
 
     private void OpenTaskManagerCard_Click(object sender, RoutedEventArgs e)
     {
-        TaskManagerLauncher.OpenTaskManager();
+        TaskManagerLauncher.OpenTaskManager(_settingsProvider);
     }
 }
