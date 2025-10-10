@@ -42,6 +42,12 @@ internal sealed partial class SettingsViewModel : ObservableObject
         set => _settingsProvider.SetSetting(Settings.AnimationMetric, value);
     }
 
+    public bool EnableTaskManagerLaunch
+    {
+        get => _settingsProvider.GetSetting(Settings.EnableTaskManagerLaunch);
+        set => _settingsProvider.SetSetting(Settings.EnableTaskManagerLaunch, value);
+    }
+
     public bool IsAnimatedGifMode => DisplayMode == PerformanceDisplayMode.RunningMan;
 
     public ObservableCollection<DisplayModeItem> AvailableDisplayModeItems { get; } =

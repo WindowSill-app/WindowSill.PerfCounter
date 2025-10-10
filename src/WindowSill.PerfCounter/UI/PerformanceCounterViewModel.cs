@@ -54,18 +54,7 @@ public partial class PerformanceCounterViewModel : ObservableObject
     [RelayCommand]
     private void OpenTaskManager()
     {
-        try
-        {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = "taskmgr.exe",
-                UseShellExecute = true
-            });
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Failed to open Task Manager: {ex.Message}");
-        }
+        TaskManagerLauncher.OpenTaskManager(_settingsProvider);
     }
 
     public static (PerformanceCounterViewModel viewModel, SillView view) CreateView(
@@ -76,7 +65,7 @@ public partial class PerformanceCounterViewModel : ObservableObject
         var viewModel = new PerformanceCounterViewModel(performanceMonitorService, settingsProvider);
 
         var view = new SillView();
-        view.Content = new PerformanceCounterView(view, pluginInfo, viewModel);
+        view.Content = new PerformanceCounterView(view, pluginInfo, viewModel, settingsProvider);
 
         return (viewModel, view);
     }

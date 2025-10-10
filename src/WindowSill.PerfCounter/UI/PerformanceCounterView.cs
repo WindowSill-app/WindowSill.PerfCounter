@@ -12,15 +12,17 @@ public sealed class PerformanceCounterView : Button
 {
     private readonly SillView _sillView;
     private readonly IPluginInfo _pluginInfo;
+    private readonly ISettingsProvider _settingsProvider;
     private readonly AnimatedVisualPlayer _animatedVisualPlayer = new();
     private readonly ImageIcon _cpuIcon = new();
     private readonly ImageIcon _memoryIcon = new();
     private readonly ImageIcon _gpuIcon = new();
 
-    public PerformanceCounterView(SillView sillView, IPluginInfo pluginInfo, PerformanceCounterViewModel viewModel)
+    public PerformanceCounterView(SillView sillView, IPluginInfo pluginInfo, PerformanceCounterViewModel viewModel, ISettingsProvider settingsProvider)
     {
         _sillView = sillView;
         _pluginInfo = pluginInfo;
+        _settingsProvider = settingsProvider;
 
         this.DataContext(
             viewModel,
@@ -30,7 +32,6 @@ public sealed class PerformanceCounterView : Button
             .Content(
                 new Grid()
                     .Children(
-                        // Percentage mode panel
                         new SillOrientedStackPanel()
                             .VerticalAlignment(VerticalAlignment.Center)
                             .Spacing(8)
@@ -79,7 +80,6 @@ public sealed class PerformanceCounterView : Button
                                     )
                             ),
 
-                        // Animated mode panel
                         _animatedVisualPlayer
                             .Width(24)
                             .Visibility(x => x.Binding(() => vm.IsPercentageMode)
@@ -100,7 +100,7 @@ public sealed class PerformanceCounterView : Button
 
     private void PerformanceCounterView_Click(object sender, RoutedEventArgs e)
     {
-        TaskManagerLauncher.OpenTaskManager();
+        TaskManagerLauncher.OpenTaskManager(_settingsProvider);
     }
 
     private void OnIsSillOrientationOrSizeChanged(object? sender, EventArgs e)
