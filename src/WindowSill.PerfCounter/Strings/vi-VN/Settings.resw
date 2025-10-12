@@ -136,10 +136,10 @@
     <value>Người chạy bộ</value>
   </data>
   <data name="EnableTaskManagerLaunch" xml:space="preserve">
-    <value>Enable Task Manager Launch</value>
+    <value>Bật Khởi động Trình Quản lý tác vụ</value>
   </data>
   <data name="EnableTaskManagerLaunchDescription" xml:space="preserve">
-    <value>Allow opening Task Manager when clicking the performance counter</value>
+    <value>Cho phép mở Trình quản lý tác vụ khi nhấp vào bộ đếm hiệu suất</value>
   </data>
   <data name="General" xml:space="preserve">
     <value> Chung </value>
