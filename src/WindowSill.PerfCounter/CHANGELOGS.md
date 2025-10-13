@@ -1,3 +1,6 @@
+# 0.7.0.0
+- Updated dependencies.
+
 # 0.6.3.0
 - Added option to disable Task Manager launch when clicking the performance counter
 
