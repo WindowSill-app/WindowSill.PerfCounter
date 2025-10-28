@@ -136,10 +136,10 @@
     <value>रनिंग मैन</value>
   </data>
   <data name="EnableTaskManagerLaunch" xml:space="preserve">
-    <value>Enable Task Manager Launch</value>
+    <value>सक्रिय करें कार्य प्रबंधक लॉन्च</value>
   </data>
   <data name="EnableTaskManagerLaunchDescription" xml:space="preserve">
-    <value>Allow opening Task Manager when clicking the performance counter</value>
+    <value>प्रदर्शन काउंटर क्लिक करते समय कार्य प्रबंधक खोलने की अनुमति दें</value>
   </data>
   <data name="General" xml:space="preserve">
     <value>सामान्य</value>

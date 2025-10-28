@@ -136,10 +136,10 @@
     <value>奔跑小人</value>
   </data>
   <data name="EnableTaskManagerLaunch" xml:space="preserve">
-    <value>Enable Task Manager Launch</value>
+    <value>启用打开任务管理器功能</value>
   </data>
   <data name="EnableTaskManagerLaunchDescription" xml:space="preserve">
-    <value>Allow opening Task Manager when clicking the performance counter</value>
+    <value>允许在点击性能计数器时打开任务管理器</value>
   </data>
   <data name="General" xml:space="preserve">
     <value>常规</value>
