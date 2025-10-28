@@ -1,3 +1,6 @@
+# 0.6.4.0
+- Improved various translations
+
 # 0.6.3.0
 - Added option to disable Task Manager launch when clicking the performance counter
 
