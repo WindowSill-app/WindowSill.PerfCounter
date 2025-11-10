@@ -1,3 +1,6 @@
+# 0.6.5.0
+- Improved Spanish translation.
+
 # 0.6.4.0
 - Improved various translations
 
