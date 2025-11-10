@@ -136,7 +136,7 @@
     <value>Hombre corriendo</value>
   </data>
   <data name="EnableTaskManagerLaunch" xml:space="preserve">
-    <value>Habilitar el &lt;b&gt;arranque del Administrador de tareas&lt;/b&gt;</value>
+    <value>Habilitar el arranque del Administrador de tareas</value>
   </data>
   <data name="EnableTaskManagerLaunchDescription" xml:space="preserve">
     <value>Permitir abrir el Administrador de tareas al hacer clic en el contador de rendimiento</value>
