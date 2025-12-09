@@ -121,7 +121,7 @@
     <value>Chỉ số Hoạt hình</value>
   </data>
   <data name="AnimationMetricDescription" xml:space="preserve">
-    <value>Chỉ số nào để sử dụng cho người chạy bộ hoạt hình</value>
+    <value>Chỉ số nào để sử dụng cho hoạt ảnh người chạy bộ</value>
   </data>
   <data name="DisplayMode" xml:space="preserve">
     <value>Chế độ Hiển thị</value>
@@ -145,9 +145,9 @@
     <value> Chung </value>
   </data>
   <data name="OpenTaskManager" xml:space="preserve">
-    <value>Mở Trình Quản lý Nhiệm vụ</value>
+    <value>Mở Trình quản lý tác vụ</value>
   </data>
   <data name="OpenTaskManagerDescription" xml:space="preserve">
-    <value>Nhấp để mở Trình Quản lý Nhiệm vụ của Windows để xem chi tiết thông tin hệ thống</value>
+    <value>Nhấp để mở Trình quản lý tác vụ của Windows để xem chi tiết thông tin hệ thống</value>
   </data>
 </root>
