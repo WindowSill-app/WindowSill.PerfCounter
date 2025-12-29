@@ -118,36 +118,36 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AnimationMetric" xml:space="preserve">
-    <value>Animation Metric</value>
+    <value>Métrica de Animação</value>
   </data>
   <data name="AnimationMetricDescription" xml:space="preserve">
-    <value>Which metric to use for animated running man</value>
+    <value>Qual métrica usar para o homem correndo animado</value>
   </data>
   <data name="DisplayMode" xml:space="preserve">
-    <value>Display Mode</value>
+    <value>Modo de Exibição</value>
   </data>
   <data name="DisplayModeDescription" xml:space="preserve">
-    <value>Choose how to display performance metrics</value>
+    <value>Escolha como exibir métricas de desempenho</value>
   </data>
   <data name="DisplayModePercentage" xml:space="preserve">
-    <value>Percentage</value>
+    <value>Porcentagem</value>
   </data>
   <data name="DisplayModeRunningMan" xml:space="preserve">
-    <value>Running Man</value>
+    <value>Homem Correndo</value>
   </data>
   <data name="EnableTaskManagerLaunch" xml:space="preserve">
-    <value>Enable Task Manager Launch</value>
+    <value>Habilitar Início do Gerenciador de Tarefas</value>
   </data>
   <data name="EnableTaskManagerLaunchDescription" xml:space="preserve">
-    <value>Allow opening Task Manager when clicking the performance counter</value>
+    <value>Permitir abrir o Gerenciador de Tarefas ao clicar no contador de desempenho</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>General</value>
+    <value>Geral</value>
   </data>
   <data name="OpenTaskManager" xml:space="preserve">
-    <value>Open Task Manager</value>
+    <value>Abrir Gerenciador de Tarefas</value>
   </data>
   <data name="OpenTaskManagerDescription" xml:space="preserve">
-    <value>Click to open Windows Task Manager for detailed system information</value>
+    <value>Clique para abrir o Gerenciador de Tarefas do Windows para informações detalhadas do sistema</value>
   </data>
 </root>
