@@ -118,36 +118,36 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AnimationMetric" xml:space="preserve">
-    <value>Chỉ số Hoạt hình</value>
+    <value>Métrica de Animação</value>
   </data>
   <data name="AnimationMetricDescription" xml:space="preserve">
-    <value>Chỉ số nào để sử dụng cho hoạt ảnh người chạy bộ</value>
+    <value>Qual métrica usar para o homem correndo animado</value>
   </data>
   <data name="DisplayMode" xml:space="preserve">
-    <value>Chế độ Hiển thị</value>
+    <value>Modo de Exibição</value>
   </data>
   <data name="DisplayModeDescription" xml:space="preserve">
-    <value>Chọn cách hiển thị các chỉ số hiệu suất</value>
+    <value>Escolha como exibir métricas de desempenho</value>
   </data>
   <data name="DisplayModePercentage" xml:space="preserve">
-    <value>Phần trăm</value>
+    <value>Porcentagem</value>
   </data>
   <data name="DisplayModeRunningMan" xml:space="preserve">
-    <value>Người chạy bộ</value>
+    <value>Homem Correndo</value>
   </data>
   <data name="EnableTaskManagerLaunch" xml:space="preserve">
-    <value>Bật Khởi động Trình Quản lý tác vụ</value>
+    <value>Habilitar Início do Gerenciador de Tarefas</value>
   </data>
   <data name="EnableTaskManagerLaunchDescription" xml:space="preserve">
-    <value>Cho phép mở Trình quản lý tác vụ khi nhấp vào bộ đếm hiệu suất</value>
+    <value>Permitir abrir o Gerenciador de Tarefas ao clicar no contador de desempenho</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value> Chung </value>
+    <value>Geral</value>
   </data>
   <data name="OpenTaskManager" xml:space="preserve">
-    <value>Mở Trình quản lý tác vụ</value>
+    <value>Abrir Gerenciador de Tarefas</value>
   </data>
   <data name="OpenTaskManagerDescription" xml:space="preserve">
-    <value>Nhấp để mở Trình quản lý tác vụ của Windows để xem chi tiết thông tin hệ thống</value>
+    <value>Clique para abrir o Gerenciador de Tarefas do Windows para informações detalhadas do sistema</value>
   </data>
 </root>
